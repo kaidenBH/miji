@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import './App.css';
 import axios from "axios";
 import loadingSvg from './assets/loading.svg';
@@ -10,6 +10,7 @@ function App() {
   const [link, setLink] = useState('');
   const [textToCopy, setTextToCopy] = useState('Text to be copied');
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
 
   const copyToClipboard = () => {
     const el = document.createElement('textarea');
@@ -34,7 +35,15 @@ function App() {
     }
   };
 
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setError(null);
+    }, 5000);
 
+    return () => {
+      clearTimeout(timer);
+    };
+  }, [error]);
 
   const API = axios.create({ 
     baseURL:  "https://miji.onrender.com",
@@ -44,13 +53,18 @@ function App() {
   const deleteLink = (short_link) => API.delete(`/deleteLink/${short_link}`);
   const handleButtonClick = async () => {
     if (inputValue !== '') {
-      setLoading(true);
-      const { data } = await newLink(inputValue);
-      setLink(data.short_link);
-      setCopied(false);
-      setTextToCopy("https://miji.onrender.com/"+data.short_link);
-      setgenerated(true);
-      setLoading(false);
+     try { setLoading(true);
+        const { data } = await newLink(inputValue);
+        console.log(data);
+        setLink(data.short_link);
+        setCopied(false);
+        setTextToCopy("https://miji.onrender.com/"+data.short_link);
+        setgenerated(true);
+      } catch (error) {
+        setError(error.response.data.message);
+      } finally {
+        setLoading(false);
+      }
     }
   };
 
@@ -77,6 +91,7 @@ function App() {
         { loading? <img src={loadingSvg} alt="My SVG" className="loading" /> 
                 : <button onClick={handleButtonClick} disabled={loading}> Generate Link</button>}
       </div>
+      {error && <div className={`error-message ${error ? 'show' : ''}`}>{error}</div>}
       {generated? (
         <div className="card">
           <h2>Your Link: </h2>

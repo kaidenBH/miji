@@ -36,3 +36,18 @@ button{
 .loading {
   height: 5rem;
 }
+.error-message {
+  background-color: #1a1a1a;
+  padding: 1%;
+  color: white;
+  width: 40%;
+  border: 0px;
+  border-radius: 10px;
+  margin: auto;
+  opacity: 0;
+  transition: opacity 1s ease; 
+}
+
+.error-message.show {
+  opacity: 1;
+}
