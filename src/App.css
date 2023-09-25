@@ -36,6 +36,12 @@ button{
 .loading {
   height: 5rem;
 }
+.link-provider {
+  background-color: #2C3333;
+  padding: 0.4%;
+  border-radius: 10px;
+  border: 0px;
+}
 .error-message {
   background-color: #1a1a1a;
   padding: 1%;
