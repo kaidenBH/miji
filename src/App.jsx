@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import './App.css';
 import axios from "axios";
+import loadingSvg from './assets/loading.svg';
 
 function App() {
   const [inputValue, setInputValue] = useState('');
@@ -8,6 +9,7 @@ function App() {
   const [copied, setCopied] = useState(false);
   const [link, setLink] = useState('');
   const [textToCopy, setTextToCopy] = useState('Text to be copied');
+  const [loading, setLoading] = useState(false);
 
   const copyToClipboard = () => {
     const el = document.createElement('textarea');
@@ -42,11 +44,13 @@ function App() {
   const deleteLink = (short_link) => API.delete(`/deleteLink/${short_link}`);
   const handleButtonClick = async () => {
     if (inputValue !== '') {
+      setLoading(true);
       const { data } = await newLink(inputValue);
       setLink(data.short_link);
       setCopied(false);
       setTextToCopy("https://miji.onrender.com/"+data.short_link);
       setgenerated(true);
+      setLoading(false);
     }
   };
 
@@ -70,7 +74,8 @@ function App() {
           value={inputValue}
           onChange={(e) => setInputValue(e.target.value)}
         />
-        <button onClick={handleButtonClick}> Generate Link</button>
+        { loading? <img src={loadingSvg} alt="My SVG" className="loading" /> 
+                : <button onClick={handleButtonClick} disabled={loading}> Generate Link</button>}
       </div>
       {generated? (
         <div className="card">
