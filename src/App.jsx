@@ -79,7 +79,7 @@ function App() {
             e.preventDefault();
             window.open(`https://miji.onrender.com/${link}`, '_blank');
           }}>https://miji.onrender.com/{link}</h2>
-          <button onClick={copyToClipboard} disabled={copied}> Copy Link</button>
+          <button onClick={copyToClipboard} disabled={copied}> Cop{copied? 'ied': 'y Link'}</button>
           <button onClick={handledelete}> Delete Link</button>
         </div>
       ) : null }
